@@ -38,6 +38,7 @@ export function GraphCanvas({
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+  
 
     // Draw edges
     edges.forEach((edge) => {
@@ -118,7 +119,7 @@ export function GraphCanvas({
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-
+  
     // Check if clicked on existing node
     const clickedNode = nodes.find((node) => {
       const distance = Math.sqrt((node.x - x) ** 2 + (node.y - y) ** 2)
@@ -140,7 +141,7 @@ export function GraphCanvas({
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-
+  
     const hoveredNode = nodes.find((node) => {
       const distance = Math.sqrt((node.x - x) ** 2 + (node.y - y) ** 2)
       return distance <= 25
@@ -152,8 +153,8 @@ export function GraphCanvas({
   return (
     <canvas
       ref={canvasRef}
-      width={800}
-      height={600}
+      width={1200}
+      height={800}
       onClick={handleCanvasClick}
       onMouseMove={handleMouseMove}
       className="border-2 border-border rounded-lg bg-card cursor-crosshair"
