@@ -12,6 +12,7 @@ interface GraphCanvasProps {
   edges: Edge[]
   onAddNode: (x: number, y: number) => void
   onSelectNode: (nodeId: string | null) => void
+  onDeleteNode: (nodeId: string) => void
   selectedNode: string | null
   startNode: string | null
   endNode: string | null
@@ -23,13 +24,24 @@ export function GraphCanvas({
   edges,
   onAddNode,
   onSelectNode,
+  onDeleteNode,
   selectedNode,
   startNode,
   endNode,
   shortestPath,
 }: GraphCanvasProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "Delete") && selectedNode) {
+        onDeleteNode(selectedNode)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedNode, onDeleteNode])
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [hoveredNode, setHoveredNode] = useState<string | null>(null)
+
 
   useEffect(() => {
     const canvas = canvasRef.current

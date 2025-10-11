@@ -98,6 +98,18 @@ export default function Home() {
 
   const canAddEdge = selectedNode !== null && previousSelectedNode !== null
 
+  const handleDeleteNode = (nodeId: string) => {
+    setNodes((prev) => prev.filter((n) => n.id !== nodeId))
+    setEdges((prev) => prev.filter((e) => e.from !== nodeId && e.to !== nodeId))
+    if (selectedNode === nodeId) setSelectedNode(null)
+    if (previousSelectedNode === nodeId) setPreviousSelectedNode(null)
+    if (startNode === nodeId) setStartNode(null)
+    if (endNode === nodeId) setEndNode(null)
+    setShortestPath([])
+    setPathDistance(null)
+    setAlgorithmSteps([])
+  }
+
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -115,6 +127,7 @@ export default function Home() {
               edges={edges}
               onAddNode={handleAddNode}
               onSelectNode={handleSelectNode}
+              onDeleteNode={handleDeleteNode}
               selectedNode={selectedNode}
               startNode={startNode}
               endNode={endNode}
