@@ -107,12 +107,12 @@ export function Controls({
             <Play className="mr-2 h-4 w-4" />
             Find Shortest Path
           </Button>
-
+          
           <Button onClick={onClear} variant="destructive" className="w-full font-sans">
             <Trash2 className="mr-2 h-4 w-4" />
             Clear Graph
           </Button>
-
+          
           {pathDistance !== null && (
             <div className="p-4 bg-accent rounded-lg">
               <p className="text-sm font-sans font-semibold text-accent-foreground">

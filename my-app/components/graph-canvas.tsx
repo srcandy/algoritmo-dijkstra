@@ -4,6 +4,8 @@ import type React from "react"
 
 import { useRef, useEffect, useState } from "react"
 import type { Node, Edge } from "@/lib/dijkstra"
+import { colors } from "./canvas_config"
+import { label_style } from "./canvas_config"
 
 interface GraphCanvasProps {
   nodes: Node[]
@@ -56,7 +58,7 @@ export function GraphCanvas({
       ctx.beginPath()
       ctx.moveTo(fromNode.x, fromNode.y)
       ctx.lineTo(toNode.x, toNode.y)
-      ctx.strokeStyle = isInPath ? "var(--color-path)" : "var(--color-edge)"
+      ctx.strokeStyle = isInPath ? colors.colorpath : colors.coloredge
       ctx.lineWidth = isInPath ? 4 : 2
       ctx.stroke()
 
@@ -64,13 +66,13 @@ export function GraphCanvas({
       const midX = (fromNode.x + toNode.x) / 2
       const midY = (fromNode.y + toNode.y) / 2
 
-      ctx.fillStyle = "var(--color-background)"
+      ctx.fillStyle = colors.edge
       ctx.fillRect(midX - 15, midY - 12, 30, 24)
 
-      ctx.fillStyle = "var(--color-foreground)"
-      ctx.font = "14px var(--font-mono)"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
+      ctx.fillStyle = label_style.colorfont
+      ctx.font = label_style.fontSize + "px " + label_style.fontFamily
+      ctx.textAlign = label_style.textAlign
+      ctx.textBaseline = label_style.textBaseline 
       ctx.fillText(edge.weight.toString(), midX, midY)
     })
 
@@ -86,28 +88,28 @@ export function GraphCanvas({
       ctx.arc(node.x, node.y, 25, 0, 2 * Math.PI)
 
       if (isStart) {
-        ctx.fillStyle = "var(--color-accent)"
+        ctx.fillStyle = colors.nodeStart
       } else if (isEnd) {
-        ctx.fillStyle = "var(--color-primary)"
+        ctx.fillStyle = colors.nodeEnd
       } else if (isInPath) {
-        ctx.fillStyle = "var(--color-node-selected)"
+        ctx.fillStyle = colors.edgeinpath
       } else {
-        ctx.fillStyle = "var(--color-node)"
+        ctx.fillStyle = colors.node 
       }
 
       ctx.fill()
 
       if (isSelected || isHovered) {
-        ctx.strokeStyle = "var(--color-foreground)"
+        ctx.strokeStyle = isSelected ? colors.nodeSelected : colors.edge
         ctx.lineWidth = 3
         ctx.stroke()
       }
 
       // Draw label
-      ctx.fillStyle = "var(--color-foreground)"
-      ctx.font = "bold 16px var(--font-sans)"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
+      ctx.fillStyle = label_style.colorfont
+      ctx.font = label_style.fontSize + "px " + label_style.fontFamily
+      ctx.textAlign = label_style.textAlign
+      ctx.textBaseline = label_style.textBaseline
       ctx.fillText(node.label, node.x, node.y)
     })
   }, [nodes, edges, selectedNode, hoveredNode, startNode, endNode, shortestPath])
@@ -124,6 +126,7 @@ export function GraphCanvas({
     const clickedNode = nodes.find((node) => {
       const distance = Math.sqrt((node.x - x) ** 2 + (node.y - y) ** 2)
       return distance <= 25
+      
     })
 
     if (clickedNode) {
@@ -155,8 +158,10 @@ export function GraphCanvas({
       ref={canvasRef}
       width={1200}
       height={800}
+      style={{ width: 1200, height: 800, display: "block" }}
       onClick={handleCanvasClick}
       onMouseMove={handleMouseMove}
+      tabIndex={-1} // no se puede enfocar → no hace scroll
       className="border-2 border-border rounded-lg bg-card cursor-crosshair"
     />
   )
