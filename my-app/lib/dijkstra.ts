@@ -128,7 +128,7 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
   if (path[0] !== startId) {
     return null
   }
-
+  console.log("Final distances:", distances)
   return {
     path,
     distance: distances.get(endId)!,

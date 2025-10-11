@@ -26,10 +26,30 @@ export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
     )
   }
 
-  // Get node labels for display
   const getNodeLabel = (nodeId: string) => {
     return nodes.find((n) => n.id === nodeId)?.label || nodeId
   }
+
+  const getCellContent = (step: AlgorithmStep, nodeId: string) => {
+  const distance = step.distances.get(nodeId)
+  const previousNode = step.previous.get(nodeId)
+
+  // Si el nodo ya fue visitado y no es el nodo actual, mostrar "*"
+  if (step.visited.has(nodeId) && step.currentNode !== nodeId) {
+    return "*"
+  }
+
+  // Si la distancia es infinito, el nodo no ha sido alcanzado aún
+  if (distance === Number.POSITIVE_INFINITY) {
+    return "No access"
+  }
+
+  // Mostrar distancia y nodo previo
+  const distanceStr = distance?.toString() || "0"
+  const previousLabel = previousNode ? getNodeLabel(previousNode) : "-"
+
+  return `${distanceStr}, ${previousLabel}`
+}
 
   return (
     <Card>
@@ -42,45 +62,31 @@ export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="font-sans">Step</TableHead>
-                <TableHead className="font-sans">Current Node</TableHead>
-                <TableHead className="font-sans">Distances</TableHead>
-                <TableHead className="font-sans">Previous</TableHead>
-                <TableHead className="font-sans">Visited</TableHead>
+                <TableHead className="font-sans font-semibold">Node</TableHead>
+                {steps.slice(1).map((step) => (
+                  <TableHead key={step.stepNumber} className="font-sans font-semibold text-center">
+                    Step {step.stepNumber}
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {steps.map((step) => (
-                <TableRow key={step.stepNumber}>
-                  <TableCell className="font-mono font-semibold">{step.stepNumber}</TableCell>
-                  <TableCell className="font-mono font-semibold text-primary">
-                    {getNodeLabel(step.currentNode)}
-                  </TableCell>
-                  <TableCell className="font-mono text-sm">
-                    <div className="flex flex-wrap gap-2">
-                      {Array.from(step.distances.entries()).map(([nodeId, distance]) => (
-                        <span key={nodeId} className="whitespace-nowrap">
-                          {getNodeLabel(nodeId)}: {distance === Number.POSITIVE_INFINITY ? "∞" : distance}
-                        </span>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-mono text-sm">
-                    <div className="flex flex-wrap gap-2">
-                      {Array.from(step.previous.entries())
-                        .filter(([, prev]) => prev !== null)
-                        .map(([nodeId, prev]) => (
-                          <span key={nodeId} className="whitespace-nowrap">
-                            {getNodeLabel(nodeId)} ← {getNodeLabel(prev!)}
-                          </span>
-                        ))}
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-mono text-sm">
-                    {Array.from(step.visited)
-                      .map((nodeId) => getNodeLabel(nodeId))
-                      .join(", ")}
-                  </TableCell>
+              {nodes.map((node) => (
+                <TableRow key={node.id}>
+                  <TableCell className="font-mono font-semibold">{node.label}</TableCell>
+                  {steps.slice(1).map((step) => {
+                    const isCurrentNode = step.currentNode === node.id
+                    const cellContent = getCellContent(step, node.id)
+
+                    return (
+                      <TableCell
+                        key={step.stepNumber}
+                        className={`font-mono text-sm text-center ${isCurrentNode ? "bg-primary/20 font-bold" : ""}`}
+                      >
+                        {cellContent}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))}
             </TableBody>
