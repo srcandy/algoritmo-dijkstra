@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { GraphCanvas } from "@/components/graph-canvas"
 import { Controls } from "@/components/controls"
-import { type Node, type Edge, dijkstra } from "@/lib/dijkstra"
+import { AlgorithmSteps } from "@/components/algorithm-steps"
+import { type Node, type Edge, type AlgorithmStep, dijkstra } from "@/lib/dijkstra"
 
 export default function Home() {
   const [nodes, setNodes] = useState<Node[]>([])
@@ -15,6 +16,7 @@ export default function Home() {
   const [edgeWeight, setEdgeWeight] = useState(1)
   const [shortestPath, setShortestPath] = useState<string[]>([])
   const [pathDistance, setPathDistance] = useState<number | null>(null)
+  const [algorithmSteps, setAlgorithmSteps] = useState<AlgorithmStep[]>([])
 
   const handleAddNode = (x: number, y: number) => {
     const newNode: Node = {
@@ -73,9 +75,11 @@ export default function Home() {
       if (result) {
         setShortestPath(result.path)
         setPathDistance(result.distance)
+        setAlgorithmSteps(result.steps)
       } else {
         setShortestPath([])
         setPathDistance(Number.POSITIVE_INFINITY)
+        setAlgorithmSteps([])
       }
     }
   }
@@ -89,6 +93,7 @@ export default function Home() {
     setEndNode(null)
     setShortestPath([])
     setPathDistance(null)
+    setAlgorithmSteps([])
   }
 
   const canAddEdge = selectedNode !== null && previousSelectedNode !== null
@@ -133,6 +138,8 @@ export default function Home() {
             pathDistance={pathDistance}
           />
         </div>
+
+        <AlgorithmSteps steps={algorithmSteps} nodes={nodes} />
       </div>
     </main>
   )

@@ -16,14 +16,24 @@ export interface PathResult {
   distance: number
   distances: Map<string, number>
   previous: Map<string, string | null>
+  steps: AlgorithmStep[]
+}
+
+export interface AlgorithmStep {
+  stepNumber: number
+  currentNode: string
+  distances: Map<string, number>
+  previous: Map<string, string | null>
+  visited: Set<string>
+  unvisited: Set<string>
 }
 
 export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: string): PathResult | null {
   const distances = new Map<string, number>()
   const previous = new Map<string, string | null>()
   const unvisited = new Set<string>()
+  const steps: AlgorithmStep[] = []
 
-  // Initialize distances
   nodes.forEach((node) => {
     distances.set(node.id, Number.POSITIVE_INFINITY)
     previous.set(node.id, null)
@@ -32,8 +42,19 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
 
   distances.set(startId, 0)
 
+  steps.push({
+    stepNumber: 0,
+    currentNode: startId,
+    distances: new Map(distances),
+    previous: new Map(previous),
+    visited: new Set(),
+    unvisited: new Set(unvisited),
+  })
+
+  const visited = new Set<string>()
+  let stepNumber = 1
+
   while (unvisited.size > 0) {
-    // Find unvisited node with minimum distance
     let currentId: string | null = null
     let minDistance = Number.POSITIVE_INFINITY
 
@@ -50,13 +71,20 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
     }
 
     unvisited.delete(currentId)
+    visited.add(currentId)
 
-    // If we reached the end node, we can stop
     if (currentId === endId) {
+      steps.push({
+        stepNumber: stepNumber++,
+        currentNode: currentId,
+        distances: new Map(distances),
+        previous: new Map(previous),
+        visited: new Set(visited),
+        unvisited: new Set(unvisited),
+      })
       break
     }
 
-    // Update distances to neighbors
     const currentDistance = distances.get(currentId)!
 
     edges.forEach((edge) => {
@@ -78,9 +106,17 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
         }
       }
     })
+
+    steps.push({
+      stepNumber: stepNumber++,
+      currentNode: currentId,
+      distances: new Map(distances),
+      previous: new Map(previous),
+      visited: new Set(visited),
+      unvisited: new Set(unvisited),
+    })
   }
 
-  // Reconstruct path
   const path: string[] = []
   let current: string | null = endId
 
@@ -89,7 +125,6 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
     current = previous.get(current) || null
   }
 
-  // Check if path is valid
   if (path[0] !== startId) {
     return null
   }
@@ -99,5 +134,6 @@ export function dijkstra(nodes: Node[], edges: Edge[], startId: string, endId: s
     distance: distances.get(endId)!,
     distances,
     previous,
+    steps,
   }
 }
