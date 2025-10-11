@@ -1,7 +1,7 @@
 export const colors = {
     node: "#000000ff",
     nodeSelected: "#ffcc00ff",
-    edge: "#7e7373ff",
+    edge: "#000000ff",
     edgeinpath: "#ff5733ff",
     nodeStart: "#f23e02",
     nodeEnd: "#013750",
