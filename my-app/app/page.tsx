@@ -129,6 +129,7 @@ export default function Home() {
               onSelectNode={handleSelectNode}
               onDeleteNode={handleDeleteNode}
               selectedNode={selectedNode}
+              previousSelectedNode={previousSelectedNode}
               startNode={startNode}
               endNode={endNode}
               shortestPath={shortestPath}

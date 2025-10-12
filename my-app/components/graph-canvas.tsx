@@ -14,6 +14,7 @@ interface GraphCanvasProps {
   onSelectNode: (nodeId: string | null) => void
   onDeleteNode: (nodeId: string) => void
   selectedNode: string | null
+  previousSelectedNode: string | null
   startNode: string | null
   endNode: string | null
   shortestPath: string[]
@@ -26,6 +27,7 @@ export function GraphCanvas({
   onSelectNode,
   onDeleteNode,
   selectedNode,
+  previousSelectedNode,
   startNode,
   endNode,
   shortestPath,
@@ -92,7 +94,7 @@ export function GraphCanvas({
     nodes.forEach((node) => {
       const isStart = node.id === startNode
       const isEnd = node.id === endNode
-      const isSelected = node.id === selectedNode
+      const isSelected = node.id === selectedNode || node.id === previousSelectedNode
       const isHovered = node.id === hoveredNode
       const isInPath = shortestPath.includes(node.id)
 
@@ -112,7 +114,7 @@ export function GraphCanvas({
       ctx.fill()
 
       if (isSelected || isHovered) {
-        ctx.strokeStyle = isSelected ? colors.nodeSelected : colors.edge
+        ctx.strokeStyle = colors.nodeSelected
         ctx.lineWidth = 3
         ctx.stroke()
       }
