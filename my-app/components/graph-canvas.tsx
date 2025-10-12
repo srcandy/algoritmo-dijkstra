@@ -32,7 +32,7 @@ export function GraphCanvas({
 }: GraphCanvasProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === "Delete") && selectedNode) {
+      if ((e.key === "Delete" || e.key === "Backspace") && selectedNode) {
         onDeleteNode(selectedNode)
       }
     }
