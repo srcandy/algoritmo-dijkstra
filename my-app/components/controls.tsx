@@ -133,6 +133,7 @@ export function Controls({
           <p>3. Set edge weight and click "Add Edge"</p>
           <p>4. Select start and end nodes</p>
           <p>5. Click "Find Shortest Path"</p>
+          <p>Note: To delete a node, select it and press Backspace."</p>
         </CardContent>
       </Card>
     </div>
