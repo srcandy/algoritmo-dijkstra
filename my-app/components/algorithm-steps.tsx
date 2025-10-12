@@ -2,14 +2,19 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import type { AlgorithmStep, Node } from "@/lib/dijkstra"
 
 interface AlgorithmStepsProps {
   steps: AlgorithmStep[]
   nodes: Node[]
+  currentStepIndex: number
+  onNextStep: () => void
+  onPreviousStep: () => void
 }
 
-export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
+export function AlgorithmSteps({ steps, nodes, currentStepIndex, onNextStep, onPreviousStep }: AlgorithmStepsProps) {
   if (steps.length === 0) {
     return (
       <Card>
@@ -29,7 +34,7 @@ export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
   const getNodeLabel = (nodeId: string) => {
     return nodes.find((n) => n.id === nodeId)?.label || nodeId
   }
-
+  
   const getCellContent = (step: AlgorithmStep, nodeId: string) => {
   const distance = step.distances.get(nodeId)
   const previousNode = step.previous.get(nodeId)
@@ -50,12 +55,39 @@ export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
 
   return `${distanceStr}, ${previousLabel}`
 }
+  // Saltar el paso 0 (estado inicial) en la visualización
+    // Muestra el paso 1 (índice 0) en la visualización
+    const displaySteps = steps.slice(1, currentStepIndex + 1)
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="font-sans">Algorithm Steps</CardTitle>
-        <CardDescription className="font-sans">Step-by-step execution of Dijkstra's algorithm</CardDescription>
+          <CardDescription className="font-sans">
+            {`Viewing step ${currentStepIndex} of ${steps.length - 1}`}
+          </CardDescription>
+        <div className="flex gap-2 mt-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onPreviousStep}
+            disabled={currentStepIndex < 1}
+            className="font-sans bg-transparent"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onNextStep}
+            disabled={currentStepIndex === steps.length}
+            className="font-sans bg-transparent"
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -63,18 +95,19 @@ export function AlgorithmSteps({ steps, nodes }: AlgorithmStepsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead className="font-sans font-semibold">Node</TableHead>
-                {steps.slice(1).map((step) => (
+                {displaySteps.map((step) => (
                   <TableHead key={step.stepNumber} className="font-sans font-semibold text-center">
-                    Step {step.stepNumber}
+                    Step {step.stepNumber - 1}
                   </TableHead>
-                ))}
+                ))} 
+                
               </TableRow>
             </TableHeader>
             <TableBody>
               {nodes.map((node) => (
                 <TableRow key={node.id}>
                   <TableCell className="font-mono font-semibold">{node.label}</TableCell>
-                  {steps.slice(1).map((step) => {
+                  {displaySteps.map((step) => {
                     const isCurrentNode = step.currentNode === node.id
                     const cellContent = getCellContent(step, node.id)
 

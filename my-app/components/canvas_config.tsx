@@ -7,8 +7,6 @@ export const colors = {
     nodeEnd: "#013750",
     colorpath: "#00988d",
     coloredge: "#000000ff",
-    
-    
 };
 export const label_style = {
     fontSize: 14,

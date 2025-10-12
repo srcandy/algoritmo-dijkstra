@@ -17,6 +17,7 @@ export default function Home() {
   const [shortestPath, setShortestPath] = useState<string[]>([])
   const [pathDistance, setPathDistance] = useState<number | null>(null)
   const [algorithmSteps, setAlgorithmSteps] = useState<AlgorithmStep[]>([])
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
 
   const handleAddNode = (x: number, y: number) => {
     const newNode: Node = {
@@ -76,26 +77,40 @@ export default function Home() {
         setShortestPath(result.path)
         setPathDistance(result.distance)
         setAlgorithmSteps(result.steps)
+          setCurrentStepIndex(result.steps.length > 2 ? 2 : 1)
       } else {
         setShortestPath([])
         setPathDistance(Number.POSITIVE_INFINITY)
         setAlgorithmSteps([])
+          setCurrentStepIndex(0)
       }
     }
   }
 
   const handleClear = () => {
-    setNodes([])
-    setEdges([])
-    setSelectedNode(null)
-    setPreviousSelectedNode(null)
-    setStartNode(null)
-    setEndNode(null)
-    setShortestPath([])
-    setPathDistance(null)
-    setAlgorithmSteps([])
+  setNodes([])
+  setEdges([])
+  setSelectedNode(null)
+  setPreviousSelectedNode(null)
+  setStartNode(null)
+  setEndNode(null)
+  setShortestPath([])
+  setPathDistance(null)
+  setAlgorithmSteps([])
+  setCurrentStepIndex(0)
   }
 
+  const handleNextStep = () => {
+    if (currentStepIndex < algorithmSteps.length - 1) {
+      setCurrentStepIndex(currentStepIndex + 1)
+    }
+  }
+
+  const handlePreviousStep = () => {
+    if (currentStepIndex > 2) {
+    setCurrentStepIndex(currentStepIndex - 1)
+    }
+  }
   const canAddEdge = selectedNode !== null && previousSelectedNode !== null
 
   const handleDeleteNode = (nodeId: string) => {
@@ -153,7 +168,13 @@ export default function Home() {
           />
         </div>
 
-        <AlgorithmSteps steps={algorithmSteps} nodes={nodes} />
+        <AlgorithmSteps
+          steps={algorithmSteps}
+          nodes={nodes}
+          currentStepIndex={currentStepIndex}
+          onNextStep={handleNextStep}
+          onPreviousStep={handlePreviousStep}
+        />
       </div>
     </main>
   )
