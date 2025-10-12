@@ -57,21 +57,21 @@ export function AlgorithmSteps({ steps, nodes, currentStepIndex, onNextStep, onP
 }
   // Saltar el paso 0 (estado inicial) en la visualización
     // Muestra el paso 1 (índice 0) en la visualización
-    const displaySteps = steps.slice(1, currentStepIndex + 1)
+    const displaySteps = steps.slice(1, currentStepIndex)
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="font-sans">Algorithm Steps</CardTitle>
           <CardDescription className="font-sans">
-            {`Viewing step ${currentStepIndex} of ${steps.length - 1}`}
+            {`Viewing step ${currentStepIndex-1} of ${steps.length-1}`}
           </CardDescription>
         <div className="flex gap-2 mt-2">
           <Button
             variant="outline"
             size="sm"
             onClick={onPreviousStep}
-            disabled={currentStepIndex < 1}
+            disabled={currentStepIndex < 0}
             className="font-sans bg-transparent"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
@@ -81,7 +81,8 @@ export function AlgorithmSteps({ steps, nodes, currentStepIndex, onNextStep, onP
             variant="outline"
             size="sm"
             onClick={onNextStep}
-            disabled={currentStepIndex === steps.length}
+            disabled={currentStepIndex === steps.length + 1
+            }
             className="font-sans bg-transparent"
           >
             Next
@@ -97,7 +98,7 @@ export function AlgorithmSteps({ steps, nodes, currentStepIndex, onNextStep, onP
                 <TableHead className="font-sans font-semibold">Node</TableHead>
                 {displaySteps.map((step) => (
                   <TableHead key={step.stepNumber} className="font-sans font-semibold text-center">
-                    Step {step.stepNumber - 1}
+                    Step {step.stepNumber}
                   </TableHead>
                 ))} 
                 

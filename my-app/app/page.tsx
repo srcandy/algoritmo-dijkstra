@@ -101,7 +101,7 @@ export default function Home() {
   }
 
   const handleNextStep = () => {
-    if (currentStepIndex < algorithmSteps.length - 1) {
+    if (currentStepIndex < algorithmSteps.length) {
       setCurrentStepIndex(currentStepIndex + 1)
     }
   }
