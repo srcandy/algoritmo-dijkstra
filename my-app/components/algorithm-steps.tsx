@@ -81,8 +81,7 @@ export function AlgorithmSteps({ steps, nodes, currentStepIndex, onNextStep, onP
             variant="outline"
             size="sm"
             onClick={onNextStep}
-            disabled={currentStepIndex === steps.length + 1
-            }
+            disabled={currentStepIndex === steps.length}
             className="font-sans bg-transparent"
           >
             Next
